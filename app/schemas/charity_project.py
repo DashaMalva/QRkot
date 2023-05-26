@@ -18,6 +18,15 @@ class CharityProjectBase(BaseModel):
 class CharityProjectUpdate(CharityProjectBase):
     """Pydantic-схема для обновления благотвор.проекта."""
 
+    class Config:
+        schema_extra = {
+            'example': {
+                'name': 'Toys for cats',
+                'description': 'Cats need to have fun',
+                'full_amount': 10000
+            }
+        }
+
     @validator('name', 'description', 'full_amount')
     def fields_cannot_be_null(cls, value):
         """Проверяет, что при изменении обязательных полей объекта,

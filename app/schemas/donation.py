@@ -1,14 +1,14 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, PositiveInt
+from pydantic import BaseModel, Field, PositiveInt
 
 from app.schemas.base import BaseDB
 
 
 class DonationCreate(BaseModel):
     """Pydantic-схема для создания пожертвования."""
-    full_amount: PositiveInt
+    full_amount: PositiveInt = Field(example=10000)
     comment: Optional[str]
 
 
