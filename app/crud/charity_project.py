@@ -1,7 +1,7 @@
 from typing import Optional
 
 from fastapi.encoders import jsonable_encoder
-from sqlalchemy import select
+from sqlalchemy import func, select, true
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.base import CRUDBase
@@ -49,6 +49,21 @@ class CRUDCharityRoom(CRUDBase):
             select(self.model.id).where(self.model.name == project_name)
         )
         return project_id.scalars().first()
+
+    async def get_projects_by_completion_rate(
+            self,
+            session: AsyncSession
+    ) -> list[tuple[str]]:
+        """Получить список закрытых проектов с расчетом времени сбора.
+        Время сбора указывается в днях."""
+        stmt = select([
+            self.model.name,
+            (func.julianday(self.model.close_date) -
+             func.julianday(self.model.create_date)).label('rate'),
+            self.model.description
+        ]).where(self.model.fully_invested == true()).order_by('rate')
+        projects = await session.execute(stmt)
+        return projects.all()
 
 
 charity_project_crud = CRUDCharityRoom(CharityProject)
