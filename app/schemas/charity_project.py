@@ -30,7 +30,8 @@ class CharityProjectUpdate(CharityProjectBase):
     @validator('name', 'description', 'full_amount')
     def fields_cannot_be_null(cls, value):
         """Проверяет, что при изменении обязательных полей объекта,
-        их значения не стали пустыми."""
+        их значения не стали пустыми.
+        """
         if value is None:
             raise ValueError('Поле не может быть пустым!')
         return value

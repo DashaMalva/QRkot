@@ -20,6 +20,8 @@ class Settings(BaseSettings):
     email: Optional[str] = None
     report_title: str = 'Charity projects report'
     report_range: str = 'A1:J100'
+    google_drive_api_version: str = 'v3'
+    google_sheets_api_version: str = 'v4'
 
     class Config:
         env_file = '.env'

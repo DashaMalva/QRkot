@@ -55,7 +55,8 @@ class CRUDCharityRoom(CRUDBase):
             session: AsyncSession
     ) -> list[tuple[str]]:
         """Получить список закрытых проектов с расчетом времени сбора.
-        Время сбора указывается в днях."""
+        Время сбора указывается в днях.
+        """
         stmt = select([
             self.model.name,
             (func.julianday(self.model.close_date) -

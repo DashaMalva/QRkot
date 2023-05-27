@@ -33,12 +33,13 @@ async def set_user_permissions(
         wrapper_service: Aiogoogle
 ) -> None:
     """Выдача прав доступа личному гугл-аккаунту к документу."""
-    service = await wrapper_service.discover('drive', 'v3')
+    service = await wrapper_service.discover(
+        'drive', settings.google_drive_api_version)
     await wrapper_service.as_service_account(
         service.permissions.create(
             fileId=spreadsheet_id,
             json=USER_PERMISSON_BODY,
-            fields="id"
+            fields='id'
         ))
 
 
@@ -46,7 +47,8 @@ async def spreadsheets_create(
         wrapper_service: Aiogoogle
 ) -> str:
     """Создание гугл-таблицы."""
-    service = await wrapper_service.discover('sheets', 'v4')
+    service = await wrapper_service.discover(
+        'sheets', settings.google_sheets_api_version)
     response = await wrapper_service.as_service_account(
         service.spreadsheets.create(json=SPREADSHEET_BODY)
     )
@@ -59,7 +61,8 @@ async def spreadsheets_update_value(
         wrapper_services: Aiogoogle
 ) -> None:
     """Формирование отчета в гугл-таблице на основе переданных данных."""
-    service = await wrapper_services.discover('sheets', 'v4')
+    service = await wrapper_services.discover(
+        'sheets', settings.google_sheets_api_version)
     table_values = [
         ['Отчет от', datetime.now().strftime(DATETIME_FORMAT)],
         ['Топ проектов по скорости закрытия'],
@@ -88,7 +91,8 @@ async def get_spreadsheets_from_disk(
         wrapper_service: Aiogoogle
 ) -> list[dict[str, str]]:
     """Получить список всех сформированных отчетов."""
-    service = await wrapper_service.discover('drive', 'v3')
+    service = await wrapper_service.discover(
+        'drive', settings.google_drive_api_version)
     spreadsheets = await wrapper_service.as_service_account(
         service.files.list(
             q=f'mimeType="application/vnd.google-apps.spreadsheet" and \
@@ -101,7 +105,8 @@ async def delete_spreadsheets_from_disk(
         wrapper_service: Aiogoogle
 ) -> None:
     """Удалить все отчеты с диска."""
-    service = await wrapper_service.discover('drive', 'v3')
+    service = await wrapper_service.discover(
+        'drive', settings.google_drive_api_version)
     spreadsheets = await get_spreadsheets_from_disk(settings.report_title,
                                                     wrapper_service)
     for spreadsheet in spreadsheets:
